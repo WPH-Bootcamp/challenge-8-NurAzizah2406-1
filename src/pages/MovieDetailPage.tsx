@@ -7,6 +7,7 @@ import { movieService } from '@/services/movieService';
 import { getImageUrl } from '@/lib/utils';
 import { useFavoriteStore } from '@/store/movieStore';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/toast';
 
 export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ export function MovieDetailPage() {
 
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavoriteStore();
   const favorite = isFavorite(movieId);
+  const { showToast } = useToast();
 
   const { data: movie, isLoading: isLoadingMovie } = useQuery({
     queryKey: ['movie', movieId],
@@ -32,8 +34,10 @@ export function MovieDetailPage() {
     if (!movie) return;
     if (favorite) {
       removeFromFavorites(movie.id);
+      showToast('Removed from Favorites', 'success');
     } else {
       addToFavorites(movie);
+      showToast('Success Add to Favorites', 'success');
     }
   };
 
