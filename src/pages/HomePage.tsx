@@ -6,6 +6,7 @@ import { movieService } from '@/services/movieService';
 import { HeroSection } from '@/components/home/HeroSection';
 import { MovieGrid } from '@/components/movie/MovieGrid';
 import { MovieCard } from '@/components/movie/MovieCard';
+import { MovieListCard } from '@/components/movie/MovieListCard';
 import { MovieCardSkeleton } from '@/components/movie/MovieCardSkeleton';
 import { SearchBar } from '@/components/search/SearchBar';
 
@@ -54,11 +55,11 @@ export function HomePage() {
             ))}
           </MovieGrid>
         ) : searchData?.results.length ? (
-          <MovieGrid>
+          <div className="flex flex-col mt-6">
             {searchData.results.map((movie, idx) => (
-              <MovieCard key={movie.id} movie={movie} index={idx} />
+              <MovieListCard key={movie.id} movie={movie} index={idx} />
             ))}
-          </MovieGrid>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <h2 className="text-2xl font-semibold">No movies found</h2>
