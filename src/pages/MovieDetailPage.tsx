@@ -86,14 +86,14 @@ export function MovieDetailPage() {
         </Button>
 
         {/* Floating Content over backdrop */}
-        <div className="container absolute bottom-0 left-0 right-0 mx-auto px-4 pb-12 md:px-8">
-          <div className="flex flex-col gap-8 md:flex-row md:items-end">
-            {/* Poster & Actions */}
+        <div className="container absolute bottom-0 left-0 right-0 mx-auto px-4 pb-6 md:px-8 md:pb-12">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:gap-8">
+            {/* Poster */}
             <motion.div 
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="w-48 shrink-0 md:w-56 lg:w-64"
+              className="w-28 shrink-0 md:w-56 lg:w-64"
             >
               <div className="overflow-hidden rounded-xl border-4 border-white/10 shadow-2xl">
                 <img
@@ -109,51 +109,51 @@ export function MovieDetailPage() {
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="flex-1 pb-4"
+              className="flex-1 pb-2 md:pb-4"
             >
-              <h1 className="mb-2 text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+              <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-white sm:text-3xl md:mb-2 md:text-5xl lg:text-6xl">
                 {movie.title}
               </h1>
               
-              <div className="mb-6 flex items-center gap-2 text-sm text-gray-300">
-                <CheckCircle2 className="h-4 w-4" />
+              <div className="mb-4 flex items-center gap-2 text-xs text-gray-300 md:mb-6 md:text-sm">
+                <CheckCircle2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                 <span>{releaseDate}</span>
               </div>
 
               {/* Action Buttons */}
-              <div className="mb-8 flex flex-wrap items-center gap-4">
-                <Button className="h-12 gap-2 rounded-full bg-primary hover:bg-primary/90 px-6 text-sm font-semibold text-white shadow-lg">
+              <div className="mb-4 flex flex-wrap items-center gap-3 md:mb-8">
+                <Button className="h-10 gap-2 rounded-full bg-primary hover:bg-primary/90 px-5 text-sm font-semibold text-white shadow-lg md:h-12 md:px-6">
                   Watch Trailer
-                  <PlayCircle className="h-5 w-5" />
+                  <PlayCircle className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="h-12 w-12 rounded-full bg-accent/80 hover:bg-accent text-white backdrop-blur-sm"
+                  className="h-10 w-10 rounded-full bg-accent/80 hover:bg-accent text-white backdrop-blur-sm md:h-12 md:w-12"
                   onClick={handleToggleFavorite}
                 >
-                  <Heart className={`h-5 w-5 ${favorite ? 'fill-primary text-primary' : ''}`} />
+                  <Heart className={`h-4 w-4 md:h-5 md:w-5 ${favorite ? 'fill-primary text-primary' : ''}`} />
                 </Button>
               </div>
 
               {/* Stat Boxes */}
-              <div className="grid grid-cols-3 gap-4 max-w-xl">
-                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-4">
-                  <Star className="mb-2 h-6 w-6 fill-gold text-gold" />
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Rating</span>
-                  <span className="text-lg font-bold text-white mt-1">{movie.vote_average?.toFixed(1)}/10</span>
+              <div className="grid grid-cols-3 gap-2 max-w-xs md:max-w-xl md:gap-4">
+                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-2.5 md:p-4">
+                  <Star className="mb-1 h-5 w-5 fill-gold text-gold md:mb-2 md:h-6 md:w-6" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold md:text-xs">Rating</span>
+                  <span className="text-sm font-bold text-white mt-0.5 md:mt-1 md:text-lg">{movie.vote_average?.toFixed(1)}/10</span>
                 </div>
-                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-4">
-                  <Video className="mb-2 h-6 w-6 text-white" />
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Genre</span>
-                  <span className="text-lg font-bold text-white mt-1 line-clamp-1 text-center">{primaryGenre}</span>
+                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-2.5 md:p-4">
+                  <Video className="mb-1 h-5 w-5 text-white md:mb-2 md:h-6 md:w-6" />
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold md:text-xs">Genre</span>
+                  <span className="text-sm font-bold text-white mt-0.5 line-clamp-1 text-center md:mt-1 md:text-lg">{primaryGenre}</span>
                 </div>
-                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-4">
-                  <div className="mb-2 h-6 w-6 flex items-center justify-center font-bold text-white border-2 border-white rounded-md">
+                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-2.5 md:p-4">
+                  <div className="mb-1 h-5 w-5 flex items-center justify-center font-bold text-white border-2 border-white rounded-md text-xs md:mb-2 md:h-6 md:w-6">
                     {ageLimit}
                   </div>
-                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Age Limit</span>
-                  <span className="text-lg font-bold text-white mt-1">{ageLimit}</span>
+                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold md:text-xs">Age Limit</span>
+                  <span className="text-sm font-bold text-white mt-0.5 md:mt-1 md:text-lg">{ageLimit}</span>
                 </div>
               </div>
             </motion.div>

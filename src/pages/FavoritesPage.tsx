@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Heart, Search, Star, PlayCircle } from 'lucide-react';
+import { Heart, Star, PlayCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { useFavoriteStore } from '@/store/movieStore';
@@ -91,19 +91,17 @@ export function FavoritesPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex min-h-[50vh] flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/30 p-8 text-center"
+          className="flex min-h-[70vh] flex-col items-center justify-center"
         >
-          <div className="mb-4 rounded-full bg-muted p-4">
-            <Heart className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h2 className="mb-2 text-2xl font-semibold">No favorites yet</h2>
-          <p className="mb-8 max-w-sm text-muted-foreground">
-            You haven't added any movies to your favorites list. Explore movies and click the heart icon to save them here.
+          {/* Clapperboard emoji as big icon */}
+          <div className="mb-6 text-8xl select-none">🎬</div>
+          <h2 className="mb-2 text-xl font-bold text-white">Data Empty</h2>
+          <p className="mb-8 text-sm text-gray-400">
+            You don't have a favorite movie yet
           </p>
-          <Button asChild size="lg" className="rounded-full bg-primary hover:bg-primary/90 shadow-lg">
+          <Button asChild className="rounded-full bg-primary hover:bg-primary/90 px-8 py-5 text-sm font-semibold text-white shadow-lg">
             <Link to="/">
-              <Search className="mr-2 h-4 w-4" />
-              Discover Movies
+              Explore Movie
             </Link>
           </Button>
         </motion.div>

@@ -1,35 +1,42 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Tv } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Tv, Search, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { SearchBar } from '@/components/search/SearchBar';
 
 export function Navbar() {
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Favorites', path: '/favorites' },
   ];
 
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    setMobileSearchOpen(false);
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-8">
-        <div className="flex items-center gap-8 md:gap-12">
+    <>
+      <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 md:h-20 md:px-8">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-            <Tv className="h-8 w-8 text-white fill-white" />
-            <span className="text-2xl font-bold tracking-tight text-white">
+          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-80" onClick={closeMobileMenu}>
+            <Tv className="h-7 w-7 text-white fill-white md:h-8 md:w-8" />
+            <span className="text-xl font-bold tracking-tight text-white md:text-2xl">
               Movie
             </span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden items-center gap-6 md:flex">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
-
               return (
                 <Link
                   key={link.name}
@@ -52,13 +59,81 @@ export function Navbar() {
               );
             })}
           </nav>
+
+          {/* Desktop Search Bar */}
+          <div className="hidden w-full max-w-sm items-center justify-end md:flex">
+            <SearchBar className="max-w-[280px]" variant="compact" />
+          </div>
+
+          {/* Mobile Right Icons */}
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={() => { setMobileSearchOpen(!mobileSearchOpen); setMobileMenuOpen(false); }}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => { setMobileMenuOpen(!mobileMenuOpen); setMobileSearchOpen(false); }}
+              className="flex h-9 w-9 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="flex w-full max-w-sm items-center justify-end">
-          <SearchBar className="max-w-[280px]" variant="compact" />
-        </div>
-      </div>
-    </header>
+        {/* Mobile Search Dropdown */}
+        <AnimatePresence>
+          {mobileSearchOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden border-t border-border/50 bg-background/95 px-4 py-3 md:hidden"
+            >
+              <SearchBar
+                variant="compact"
+                onSearch={() => setMobileSearchOpen(false)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden border-t border-border/50 bg-background/95 md:hidden"
+            >
+              <nav className="flex flex-col px-4 py-2">
+                {navLinks.map((link) => {
+                  const isActive = location.pathname === link.path;
+                  return (
+                    <Link
+                      key={link.name}
+                      to={link.path}
+                      onClick={closeMobileMenu}
+                      className={cn(
+                        'py-3 text-base font-medium transition-colors border-b border-border/30 last:border-0',
+                        isActive ? 'text-white' : 'text-muted-foreground hover:text-white'
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+    </>
   );
 }
