@@ -55,12 +55,12 @@ export function HeroSection({ movie, isLoading }: HeroSectionProps) {
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-4">
-            <Button size="lg" className="h-12 gap-2 rounded-full px-8 text-sm font-semibold shadow-lg bg-primary hover:bg-primary/90 text-white">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <Button size="lg" className="h-12 w-full sm:w-auto justify-center gap-2 rounded-full px-8 text-sm font-semibold shadow-lg bg-primary hover:bg-primary/90 text-white">
               Watch Trailer
               <PlayCircle className="h-5 w-5 fill-current" />
             </Button>
-            <Button size="lg" variant="secondary" className="h-12 gap-2 rounded-full px-8 text-sm font-semibold bg-accent/80 hover:bg-accent text-white backdrop-blur-sm" asChild>
+            <Button size="lg" variant="outline" className="h-12 w-full sm:w-auto justify-center gap-2 rounded-full px-8 text-sm font-semibold bg-transparent border-gray-700 hover:bg-gray-800/80 text-white" asChild>
               <Link to={`/movie/${movie.id}`}>
                 See Detail
               </Link>
