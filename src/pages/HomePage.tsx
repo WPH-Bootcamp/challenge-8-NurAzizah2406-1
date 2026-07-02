@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Search } from 'lucide-react';
 
 import { movieService } from '@/services/movieService';
 import { HeroSection } from '@/components/home/HeroSection';
@@ -43,8 +44,8 @@ export function HomePage() {
   if (query) {
     return (
       <div className="container mx-auto px-4 py-8 md:px-8">
-        <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-          <h1 className="text-3xl font-bold tracking-tight">Search Results</h1>
+        <div className="mb-8 hidden items-center justify-between gap-4 md:flex md:flex-row">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Search Results</h1>
           <SearchBar initialQuery={query} />
         </div>
 
@@ -61,10 +62,14 @@ export function HomePage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <h2 className="text-2xl font-semibold">No movies found</h2>
-            <p className="mt-2 text-muted-foreground">
-              We couldn't find any movies matching "{query}"
+          <div className="flex min-h-[50vh] flex-col items-center justify-center py-20 text-center">
+            <div className="mb-6 relative text-8xl select-none text-muted-foreground/50">
+              🎬
+              <Search className="absolute -bottom-2 -right-2 h-14 w-14 rounded-full bg-background p-2 text-muted-foreground" />
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">Data Not Found</h2>
+            <p className="mt-2 text-sm text-gray-400">
+              Try other keywords
             </p>
           </div>
         )}
