@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" fill="none">
+  <rect width="300" height="450" rx="12" fill="#1e1b4b"/>
+  <rect x="1" y="1" width="298" height="448" rx="11" stroke="#312e81" stroke-width="2" stroke-dasharray="8 4"/>
+  <g transform="translate(110, 170)">
+    <rect x="10" y="0" width="60" height="60" rx="8" fill="#312e81"/>
+    <path d="M20 15h10v8H20V15zm14 0h10v8H34V15zm14 0h10v8H48V15zM20 26h48v26a4 4 0 01-4 4H24a4 4 0 01-4-4V26z" fill="#4f46e5"/>
+    <circle cx="44" cy="40" r="6" fill="#312e81"/>
+    <circle cx="44" cy="40" r="3" fill="#4f46e5"/>
+  </g>
+  <text x="150" y="260" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#6366f1">No Poster</text>
+  <text x="150" y="282" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#4f46e5">Available</text>
+</svg>
