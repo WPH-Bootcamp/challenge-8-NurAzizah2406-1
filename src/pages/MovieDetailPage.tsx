@@ -1,17 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Clock, Calendar, Star, Heart } from 'lucide-react';
+import { ArrowLeft, PlayCircle, Star, Video, Heart, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { movieService } from '@/services/movieService';
-import { getImageUrl, formatRuntime, formatDate } from '@/lib/utils';
+import { getImageUrl } from '@/lib/utils';
 import { useFavoriteStore } from '@/store/movieStore';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { GenreBadge } from '@/components/movie/GenreBadge';
-import { CastCard } from '@/components/movie/CastCard';
-import { MovieCard } from '@/components/movie/MovieCard';
-import { MovieGrid } from '@/components/movie/MovieGrid';
 
 export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -30,12 +25,6 @@ export function MovieDetailPage() {
   const { data: credits, isLoading: isLoadingCredits } = useQuery({
     queryKey: ['movie', movieId, 'credits'],
     queryFn: () => movieService.getMovieCredits(movieId),
-    enabled: !!movieId,
-  });
-
-  const { data: similarData, isLoading: isLoadingSimilar } = useQuery({
-    queryKey: ['movie', movieId, 'similar'],
-    queryFn: () => movieService.getSimilarMovies(movieId),
     enabled: !!movieId,
   });
 
@@ -58,146 +47,156 @@ export function MovieDetailPage() {
 
   const backdropUrl = getImageUrl(movie.backdrop_path, 'original');
   const posterUrl = getImageUrl(movie.poster_path, 'w500');
+  const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Unknown';
+  const primaryGenre = movie.genres?.[0]?.name || 'Movie';
+  
+  // Note: Age limit is not directly provided by standard TMDB without release_dates append, so we mock it based on adult flag or use a placeholder
+  const ageLimit = movie.adult ? '18+' : '13';
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pb-16"
+      className="min-h-screen bg-background pb-16"
     >
-      {/* Backdrop Section */}
-      <div className="relative h-[40vh] w-full overflow-hidden md:h-[50vh] lg:h-[60vh]">
+      {/* Hero Backdrop Section */}
+      <div className="relative h-[50vh] w-full overflow-hidden md:h-[60vh] lg:h-[80vh]">
         <div className="absolute inset-0">
           <img
             src={backdropUrl}
             alt={movie.title}
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-top opacity-50"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-          <div className="absolute inset-0 bg-background/30 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
         </div>
         
         <Button
           variant="ghost"
           size="icon"
           onClick={() => navigate(-1)}
-          className="absolute left-4 top-4 z-10 h-10 w-10 rounded-full bg-background/50 backdrop-blur-md hover:bg-background/80 md:left-8 md:top-8"
+          className="absolute left-4 top-4 z-10 h-10 w-10 rounded-full bg-black/50 text-white backdrop-blur-md hover:bg-black/80 md:left-8 md:top-8"
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
+
+        {/* Floating Content over backdrop */}
+        <div className="container absolute bottom-0 left-0 right-0 mx-auto px-4 pb-12 md:px-8">
+          <div className="flex flex-col gap-8 md:flex-row md:items-end">
+            {/* Poster & Actions */}
+            <motion.div 
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="w-48 shrink-0 md:w-56 lg:w-64"
+            >
+              <div className="overflow-hidden rounded-xl border-4 border-white/10 shadow-2xl">
+                <img
+                  src={posterUrl}
+                  alt={`Poster for ${movie.title}`}
+                  className="w-full object-cover"
+                />
+              </div>
+            </motion.div>
+
+            {/* Title & Stats */}
+            <motion.div 
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex-1 pb-4"
+            >
+              <h1 className="mb-2 text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+                {movie.title}
+              </h1>
+              
+              <div className="mb-6 flex items-center gap-2 text-sm text-gray-300">
+                <CheckCircle2 className="h-4 w-4" />
+                <span>{releaseDate}</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="mb-8 flex flex-wrap items-center gap-4">
+                <Button className="h-12 gap-2 rounded-full bg-primary hover:bg-primary/90 px-6 text-sm font-semibold text-white shadow-lg">
+                  Watch Trailer
+                  <PlayCircle className="h-5 w-5" />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-12 w-12 rounded-full bg-accent/80 hover:bg-accent text-white backdrop-blur-sm"
+                  onClick={handleToggleFavorite}
+                >
+                  <Heart className={`h-5 w-5 ${favorite ? 'fill-primary text-primary' : ''}`} />
+                </Button>
+              </div>
+
+              {/* Stat Boxes */}
+              <div className="grid grid-cols-3 gap-4 max-w-xl">
+                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-4">
+                  <Star className="mb-2 h-6 w-6 fill-gold text-gold" />
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Rating</span>
+                  <span className="text-lg font-bold text-white mt-1">{movie.vote_average?.toFixed(1)}/10</span>
+                </div>
+                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-4">
+                  <Video className="mb-2 h-6 w-6 text-white" />
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Genre</span>
+                  <span className="text-lg font-bold text-white mt-1 line-clamp-1 text-center">{primaryGenre}</span>
+                </div>
+                <div className="flex flex-col items-center justify-center rounded-xl bg-card border border-border p-4">
+                  <div className="mb-2 h-6 w-6 flex items-center justify-center font-bold text-white border-2 border-white rounded-md">
+                    {ageLimit}
+                  </div>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Age Limit</span>
+                  <span className="text-lg font-bold text-white mt-1">{ageLimit}</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
       </div>
 
-      <div className="container relative mx-auto -mt-32 px-4 md:-mt-48 md:px-8">
-        <div className="flex flex-col gap-8 md:flex-row md:items-start lg:gap-12">
-          {/* Poster */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="w-full shrink-0 md:w-1/3 lg:w-1/4"
-          >
-            <div className="overflow-hidden rounded-xl border border-border/50 shadow-2xl">
-              <img
-                src={posterUrl}
-                alt={`Poster for ${movie.title}`}
-                className="w-full object-cover"
-              />
-            </div>
-            
-            <Button
-              className="mt-4 w-full gap-2 rounded-lg py-6 shadow-lg"
-              variant={favorite ? 'destructive' : 'default'}
-              onClick={handleToggleFavorite}
-            >
-              <Heart className={`h-5 w-5 ${favorite ? 'fill-current' : ''}`} />
-              {favorite ? 'Remove from Favorites' : 'Add to Favorites'}
-            </Button>
-          </motion.div>
+      <div className="container mx-auto px-4 py-12 md:px-8">
+        <div className="max-w-4xl">
+          {/* Overview Section */}
+          <div className="mb-12">
+            <h2 className="mb-4 text-2xl font-bold text-white">Overview</h2>
+            <p className="leading-relaxed text-gray-400 md:text-lg">
+              {movie.overview}
+            </p>
+          </div>
 
-          {/* Details */}
-          <motion.div 
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex-1 pt-4 md:pt-32 lg:pt-40"
-          >
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              {movie.title}
-            </h1>
-            
-            {movie.tagline && (
-              <p className="mt-2 text-lg italic text-muted-foreground">
-                "{movie.tagline}"
-              </p>
-            )}
-
-            <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-foreground/80">
-              <div className="flex items-center gap-1.5 font-medium text-gold">
-                <Star className="h-5 w-5 fill-current" />
-                <span className="text-base">{movie.vote_average?.toFixed(1)}</span>
-              </div>
-              <div className="h-4 w-px bg-border" />
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>{formatDate(movie.release_date)}</span>
-              </div>
-              <div className="h-4 w-px bg-border" />
-              <div className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>{formatRuntime(movie.runtime)}</span>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              {movie.genres?.map((genre) => (
-                <GenreBadge key={genre.id} genre={genre} />
-              ))}
-            </div>
-
-            <Separator className="my-8" />
-
+          {/* Cast & Crew Section */}
+          {!isLoadingCredits && credits?.cast && credits.cast.length > 0 && (
             <div>
-              <h3 className="text-xl font-semibold">Overview</h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
-                {movie.overview}
-              </p>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Top Cast */}
-        {!isLoadingCredits && credits?.cast && credits.cast.length > 0 && (
-          <div className="mt-16">
-            <h3 className="mb-6 text-2xl font-bold tracking-tight">Top Cast</h3>
-            <div className="scroll-container -mx-4 flex gap-4 px-4 pb-4 md:mx-0 md:px-0">
-              {credits.cast.slice(0, 10).map((actor) => (
-                <CastCard key={actor.id} cast={actor} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Similar Movies */}
-        {!isLoadingSimilar && similarData?.results && similarData.results.length > 0 && (
-          <div className="mt-16">
-            <h3 className="mb-6 text-2xl font-bold tracking-tight">Similar Movies</h3>
-            <div className="scroll-container -mx-4 flex gap-4 px-4 pb-4 md:mx-0 md:px-0 lg:hidden">
-               {similarData.results.map((movie, idx) => (
-                  <div key={movie.id} className="scroll-item w-40 flex-none sm:w-48">
-                    <MovieCard movie={movie} index={idx} />
+              <h2 className="mb-6 text-2xl font-bold text-white">Cast & Crew</h2>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {credits.cast.slice(0, 6).map((actor) => (
+                  <div key={actor.id} className="flex items-center gap-4">
+                    <div className="h-16 w-16 overflow-hidden rounded-lg bg-card">
+                      {actor.profile_path ? (
+                        <img
+                          src={getImageUrl(actor.profile_path, 'w185')}
+                          alt={actor.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-muted text-2xl text-muted-foreground">
+                          {actor.name.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-white">{actor.name}</h4>
+                      <p className="text-sm text-muted-foreground">{actor.character}</p>
+                    </div>
                   </div>
-               ))}
-            </div>
-            <div className="hidden lg:block">
-              <MovieGrid>
-                {similarData.results.slice(0, 6).map((movie, idx) => (
-                  <MovieCard key={movie.id} movie={movie} index={idx} />
                 ))}
-              </MovieGrid>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </motion.div>
   );

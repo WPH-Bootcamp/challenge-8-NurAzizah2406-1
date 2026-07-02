@@ -8,7 +8,6 @@ import { MovieGrid } from '@/components/movie/MovieGrid';
 import { MovieCard } from '@/components/movie/MovieCard';
 import { MovieCardSkeleton } from '@/components/movie/MovieCardSkeleton';
 import { SearchBar } from '@/components/search/SearchBar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function HomePage() {
   const [searchParams] = useSearchParams();
@@ -33,8 +32,10 @@ export function HomePage() {
   });
 
   const renderSkeletons = () => (
-    Array.from({ length: 10 }).map((_, i) => (
-      <MovieCardSkeleton key={i} />
+    Array.from({ length: 6 }).map((_, i) => (
+      <div key={i} className="scroll-item w-36 flex-none sm:w-44 md:w-52 lg:w-60">
+        <MovieCardSkeleton />
+      </div>
     ))
   );
 
@@ -48,7 +49,9 @@ export function HomePage() {
 
         {isLoadingSearch ? (
           <MovieGrid>
-            {renderSkeletons()}
+            {Array.from({ length: 10 }).map((_, i) => (
+              <MovieCardSkeleton key={i} />
+            ))}
           </MovieGrid>
         ) : searchData?.results.length ? (
           <MovieGrid>
@@ -72,65 +75,41 @@ export function HomePage() {
   const popularMovies = popularData?.results.slice(1) || [];
 
   return (
-    <div className="pb-16">
+    <div className="pb-16 bg-background">
       <HeroSection movie={featuredMovie} isLoading={isLoadingPopular} />
 
-      <div className="container mx-auto -mt-8 px-4 relative z-10 md:-mt-16 md:px-8">
-        <div className="mb-10 flex justify-center">
-          <div className="w-full max-w-2xl rounded-full bg-background/80 p-2 shadow-xl backdrop-blur-md border border-border/50">
-            <SearchBar />
+      <div className="container mx-auto mt-12 px-4 md:px-8">
+        {/* Trending Now Section */}
+        <div className="mb-12">
+          <h2 className="mb-6 text-2xl font-bold tracking-tight text-white md:text-3xl">Trending Now</h2>
+          <div className="scroll-container -mx-4 flex gap-4 px-4 pb-4 md:mx-0 md:px-0">
+            {isLoadingPopular ? (
+              renderSkeletons()
+            ) : (
+              popularMovies.map((movie, idx) => (
+                <div key={movie.id} className="scroll-item w-36 flex-none sm:w-44 md:w-52 lg:w-60">
+                  <MovieCard movie={movie} index={idx} rank={idx + 1} />
+                </div>
+              ))
+            )}
           </div>
         </div>
 
-        <Tabs defaultValue="popular" className="w-full">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Explore Movies</h2>
-            <TabsList className="bg-card border border-border">
-              <TabsTrigger value="popular" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Popular</TabsTrigger>
-              <TabsTrigger value="nowPlaying" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Now Playing</TabsTrigger>
-            </TabsList>
-          </div>
-
-          <TabsContent value="popular" className="mt-0 outline-none">
-            {isLoadingPopular ? (
-              <MovieGrid>
-                {renderSkeletons()}
-              </MovieGrid>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <MovieGrid>
-                  {popularMovies.map((movie, idx) => (
-                    <MovieCard key={movie.id} movie={movie} index={idx} />
-                  ))}
-                </MovieGrid>
-              </motion.div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="nowPlaying" className="mt-0 outline-none">
+        {/* New Release Section */}
+        <div className="mb-12">
+          <h2 className="mb-6 text-2xl font-bold tracking-tight text-white md:text-3xl">New Release</h2>
+          <div className="scroll-container -mx-4 flex gap-4 px-4 pb-4 md:mx-0 md:px-0">
             {isLoadingNowPlaying ? (
-              <MovieGrid>
-                {renderSkeletons()}
-              </MovieGrid>
+              renderSkeletons()
             ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <MovieGrid>
-                  {nowPlayingData?.results.map((movie, idx) => (
-                    <MovieCard key={movie.id} movie={movie} index={idx} />
-                  ))}
-                </MovieGrid>
-              </motion.div>
+              nowPlayingData?.results.map((movie, idx) => (
+                <div key={movie.id} className="scroll-item w-36 flex-none sm:w-44 md:w-52 lg:w-60">
+                  <MovieCard movie={movie} index={idx} />
+                </div>
+              ))
             )}
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );

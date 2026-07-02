@@ -1,11 +1,10 @@
-import { Play, Info } from 'lucide-react';
+import { PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 import { Movie } from '@/types';
 import { getImageUrl } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 
 interface HeroSectionProps {
   movie?: Movie;
@@ -33,52 +32,37 @@ export function HeroSection({ movie, isLoading }: HeroSectionProps) {
           className="h-full w-full object-cover object-top"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
       </div>
 
       {/* Content */}
-      <div className="container relative mx-auto flex h-full flex-col justify-end px-4 pb-12 md:px-8 md:pb-24 lg:justify-center lg:pb-0">
+      <div className="container relative mx-auto flex h-full flex-col justify-center px-4 md:px-8 lg:pb-16">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
           className="max-w-2xl"
         >
-          {/* Rating & Release Year */}
-          <div className="mb-4 flex flex-wrap items-center gap-3">
-            <Badge variant="secondary" className="bg-primary/20 text-primary hover:bg-primary/30 border-primary/20">
-              Featured
-            </Badge>
-            <div className="flex items-center gap-1 text-sm font-medium text-gold">
-              <span className="text-xl">★</span>
-              <span>{movie.vote_average ? movie.vote_average.toFixed(1) : 'NR'}</span>
-            </div>
-            <span className="text-sm font-medium text-muted-foreground">
-              {movie.release_date ? new Date(movie.release_date).getFullYear() : 'Unknown'}
-            </span>
-          </div>
-
           {/* Title */}
-          <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
             {movie.title}
           </h1>
 
           {/* Overview */}
-          <p className="line-clamp-3 mb-8 max-w-xl text-base text-foreground/80 sm:text-lg md:text-xl">
+          <p className="line-clamp-3 mb-8 max-w-xl text-base text-gray-300 sm:text-lg">
             {movie.overview}
           </p>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-4">
-            <Button size="lg" className="h-12 gap-2 rounded-full px-8 text-base shadow-lg shadow-primary/25">
-              <Play className="h-5 w-5 fill-current" />
-              Play Trailer
+            <Button size="lg" className="h-12 gap-2 rounded-full px-8 text-sm font-semibold shadow-lg bg-primary hover:bg-primary/90 text-white">
+              Watch Trailer
+              <PlayCircle className="h-5 w-5 fill-current" />
             </Button>
-            <Button size="lg" variant="outline" className="h-12 gap-2 rounded-full px-8 text-base backdrop-blur-md bg-background/20" asChild>
+            <Button size="lg" variant="secondary" className="h-12 gap-2 rounded-full px-8 text-sm font-semibold bg-accent/80 hover:bg-accent text-white backdrop-blur-sm" asChild>
               <Link to={`/movie/${movie.id}`}>
-                <Info className="h-5 w-5" />
-                More Info
+                See Detail
               </Link>
             </Button>
           </div>
