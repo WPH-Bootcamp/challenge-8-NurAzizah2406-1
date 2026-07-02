@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-import { Movie } from '@/types';
+import type { Movie } from '@/types';
 import { getImageUrl } from '@/lib/utils';
 
 interface MovieCardProps {

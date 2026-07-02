@@ -2,7 +2,7 @@ import { PlayCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-import { Movie } from '@/types';
+import type { Movie } from '@/types';
 import { getImageUrl } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 

@@ -1,5 +1,5 @@
 import { getImageUrl } from '@/lib/utils';
-import { Cast } from '@/types';
+import type { Cast } from '@/types';
 
 interface CastCardProps {
   cast: Cast;

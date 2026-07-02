@@ -1,5 +1,5 @@
 import tmdbApi from '@/lib/axios';
-import { MovieResponse, MovieDetails, Credits } from '@/types';
+import type { MovieResponse, MovieDetails, Credits } from '@/types';
 
 export const movieService = {
   getPopularMovies: async (page: number = 1): Promise<MovieResponse> => {
