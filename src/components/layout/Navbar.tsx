@@ -111,17 +111,33 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu Fullscreen Overlay */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.2 }}
-              className="overflow-hidden border-t border-border/50 bg-background/95 md:hidden"
+              className="fixed inset-0 z-[100] flex flex-col bg-background px-4 py-4 md:hidden"
             >
-              <nav className="flex flex-col px-4 py-2">
+              {/* Menu Header */}
+              <div className="flex h-12 items-center justify-between mb-8">
+                <Link to="/" className="flex items-center gap-2" onClick={closeMobileMenu}>
+                  <Tv className="h-7 w-7 text-white fill-white" />
+                  <span className="text-xl font-bold tracking-tight text-white">Movie</span>
+                </Link>
+                <button
+                  onClick={closeMobileMenu}
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10"
+                  aria-label="Close menu"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Menu Links */}
+              <nav className="flex flex-col gap-6 px-2">
                 {navLinks.map((link) => {
                   const isActive = location.pathname === link.path;
                   return (
@@ -130,8 +146,8 @@ export function Navbar() {
                       to={link.path}
                       onClick={closeMobileMenu}
                       className={cn(
-                        'py-3 text-base font-medium transition-colors border-b border-border/30 last:border-0',
-                        isActive ? 'text-white' : 'text-muted-foreground hover:text-white'
+                        'text-lg font-medium transition-colors',
+                        isActive ? 'text-white' : 'text-gray-400 hover:text-white'
                       )}
                     >
                       {link.name}

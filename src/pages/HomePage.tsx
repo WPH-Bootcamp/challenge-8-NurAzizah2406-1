@@ -104,17 +104,19 @@ export function HomePage() {
         {/* New Release Section */}
         <div className="mb-12">
           <h2 className="mb-6 text-2xl font-bold tracking-tight text-white md:text-3xl">New Release</h2>
-          <div className="scroll-container -mx-4 flex gap-4 px-4 pb-4 md:mx-0 md:px-0">
-            {isLoadingNowPlaying ? (
-              renderSkeletons()
-            ) : (
-              nowPlayingData?.results.map((movie, idx) => (
-                <div key={movie.id} className="scroll-item w-36 flex-none sm:w-44 md:w-52 lg:w-60">
-                  <MovieCard movie={movie} index={idx} />
-                </div>
-              ))
-            )}
-          </div>
+          {isLoadingNowPlaying ? (
+            <MovieGrid>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <MovieCardSkeleton key={i} />
+              ))}
+            </MovieGrid>
+          ) : (
+            <MovieGrid>
+              {nowPlayingData?.results.map((movie, idx) => (
+                <MovieCard key={movie.id} movie={movie} index={idx} />
+              ))}
+            </MovieGrid>
+          )}
         </div>
       </div>
     </div>
