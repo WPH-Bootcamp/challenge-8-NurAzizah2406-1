@@ -5,13 +5,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import './index.css';
 import App from './App.tsx';
 
-// TODO: Configure QueryClient with appropriate default options
-// Reference: https://tanstack.com/query/latest/docs/framework/react/reference/QueryClient
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // TODO: Configure default query options
-      // Examples: refetchOnWindowFocus, retry, staleTime, etc.
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });

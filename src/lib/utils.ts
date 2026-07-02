@@ -6,15 +6,26 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// TODO: Add utility functions for image URLs
-// Hint: TMDB returns relative paths, you need to construct full image URLs
-// Reference: https://developer.themoviedb.org/docs/image-basics
-
-export function getImageUrl(path: string, size: string = 'original'): string {
-  // TODO: Implement image URL construction
-  // Use VITE_TMDB_IMAGE_BASE_URL from environment variables
-  return '';
+export function getImageUrl(path: string | null | undefined, size: string = 'original'): string {
+  if (!path) return '/images/no-poster.svg';
+  const baseUrl = import.meta.env.VITE_TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p';
+  return `${baseUrl}/${size}${path}`;
 }
 
-// TODO: Add more utility functions as needed
-// Examples: formatDate, formatRuntime, etc.
+export function formatDate(dateString: string | null | undefined): string {
+  if (!dateString) return 'Unknown Date';
+  try {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  } catch (e) {
+    return dateString;
+  }
+}
+
+export function formatRuntime(minutes: number | null | undefined): string {
+  if (!minutes) return 'Unknown Runtime';
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hours === 0) return `${mins}m`;
+  return `${hours}h ${mins}m`;
+}

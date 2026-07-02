@@ -1,7 +1,5 @@
 // Constants untuk aplikasi
 
-// TODO: Define constants yang digunakan di seluruh aplikasi
-
 export const IMAGE_SIZES = {
   poster: {
     small: 'w185',
@@ -22,9 +20,6 @@ export const IMAGE_SIZES = {
     original: 'original',
   },
 } as const;
-
-// TODO: Add more constants as needed
-// Examples: API endpoints, query keys, storage keys, etc.
 
 export const STORAGE_KEYS = {
   favorites: 'movie-favorites',
